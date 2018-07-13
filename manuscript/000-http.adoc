@@ -1,0 +1,22 @@
+
+== Type-safe HTTP
+
+### Akka HTTP's Domain Model
+
+A fully type-safe representation of the HTTP domain is difficult to pull off.
+HTTP is notorious for its corner cases and ambiguities.
+
+JSON example
+
+### Spraying the Routes -- a note on type-safe routing DSLs
+
+
+
+== The people crazy enough to think they can change the world... 
+
+In this section we will explore random crazy ideas that may change how actor systems look like in 
+"magical dream land" implementations.
+
+https://www.goodreads.com/author/show/14907567.Rob_Siltanen
+
+### Async/await within receive blocks

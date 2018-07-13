@@ -1,0 +1,341 @@
+
+== Actor internals
+
+### A world of Messages
+
+Actors have only one way of communicating -- by sending and receiving messages.
+Those messages are enqueued into Mailboxes and processed in-order as they arrived in the mailbox
+by given actor. It can, in reaction to a message: 
+
+1. send a message, 
+2. spawn other actors, 
+3. and change its behavior.
+
+These three actions are the core of the actor model, and as you'll see all core abstractions of Akka
+are built around these ideas. In this chapter we'll learn about Akka's internals of how actors are started, send and receive messages.
+
+
+### The Dungeon -- what makes the Actors run
+
+"The Dungeon" is how the Akka team refers to the "internals" package of Akka actors. The package is indeed called
+`akka.actor.dungeon`, and is intended to signal to users of the library that they really should not "go there". 
+It also reminds a bit of the Akka teams office back in the early days in Uppsala (Sweden), which inside of an old prison 
+-- which may explain a few "cell", "dragon" and other "dungeon" references in the early parts of the code base.
+
+The dungeon is what makes the actors run, it contains all low level scheduling and memory visibility tricks Akka has up its sleves.
+In this chapter we'll explore those step by step, in order to truly understand how actors work.
+
+#### Making of a Cyborg: Starting Actors
+
+As well versed Akka developer you likely know that top-level Actors are more "expensive" than child Actors.
+Have you ever wondered why that is? In this section we'll explore how Actors are created, and this will also explain
+why and how top level actors are more difficult for the infrastructure to start than child actors. 
+
+Hint: it relates to "from the outside of system" initiated starting of them vs. from "the inside of the system/actor".
+
+Note:: You are highly encouraged to loop the fantastic track "Making of a Cyborg" by Kenji Kawai, from the 1995 movie
+'Ghost in the Shell' while reading this chapter. Here is a youtube search for it: `https://www.youtube.com/results?search_query=kenji+kawai+making+of+a+cyborg`
+
+##### Guardian Actors
+
+The Untyped `ActorSystem` has 2 main guardians, they are maintained by Akka itself.
+
+The `/user` guardian is where we "attach" all actors started by users, e.g. by `system.actorOf`,
+and the `/system` guardian is where we "attach" all actors started using the special `system: ExtendedActorSystem.systemActorOf`
+actors. They don't really differ in behavior so much; The user guardians supervision strategy can be configured by config by users,
+but the system one not. During shutting down the system, the system actors are shut down LAST (CHECK THIS), after all user actors are stopped.
+That's about it.
+
+##### system.actorOf
+
+This is how we start (or "spawn") "top-level" actors. Note that we are not IN the `/user` guardian, we are after all "somewhere on the side"
+yet we need to attach the new child to the `/user` guardian. This means we have to send a message to the user guardian asynchronously
+for it to perform the spawning, yet at the same time we do not want to block while we do this.
+
+```scala
+val ref = system.actorOf(act, "major") 
+  // sync: notice we got our ActorRef back immediately (!)
+ref ! "Reporting for duty!" // we immediately send
+  // async: dear `/user`, please attach child `major`
+  // async: `/user`: reserved name "major"
+  // async: `/user`: initializing `/user/major`
+  // async: `/user`: repoint (!) `ref` to `/user/major`!
+```
+
+The main principle here is that a) we do not want to block until the actor is fully initialized in `actorOf`,
+and b) we are bound to perform some async work during initialization since the `/user` guardian is an actor,
+so the way to communicate with it is via async operations.
+
+Initial steps of starting a top level actor are "reserving" the name in the user guardians `ChildrenContainer`.
+This is a special datastructure in which we keep all the child actors. The first thing to do *synchronously (!)*
+is to reserve the new name, in order to be able to predictably be able to handle attempts of starting actors with 
+the same name from different threads, like this:
+
+
+```
+// Thread 1:
+  system.actorOf(..., name = "major")
+  
+// Thread 2, concurrently: 
+  system.actorOf(..., name = "major")
+  
+// one of those calls is guaranteed to throw
+```
+
+The *guarantee* given by the actor system is that always exactly one of the calls will succeed and the other will fail with an `InvalidActorNameException(s"actor name [$name] is not unique!")`. This is why spawning has a synchronous part  and an asynchronous part to it. The synchronous part is mostly about guaranteeing actor name uniqueness and preparing the "shell" ActorRef as you'll see in the following steps. The asynchronous part is mostly about setting up supervision.
+
+
+Actors are identified not only by path but also UUID.
+
+```
+val childPath = new ChildActorPath(cell.self.path, name, ActorCell.newUid())
+cell.provider.actorOf(cell.systemImpl, props, cell.self, childPath,
+            systemService = systemService, deploy = None, lookupDeploy = true, async = async)
+```
+
+This brings us to another abstraction inside the core of Akka: `ActorRefProvider`. 
+Currently two implementations of it exist: the `LocalActorRefProvider` and the `RemoteActorRefProvider`.
+The remote one is only needed for deploying actors on remote nodes, which is a terrible hack and an idea the team would like to get rid of. TODO CHECK THIS.
+
+We will focus only on the `LocalActorRefProvider` in this section. Not only does it actually create the ActorRef that we'll be able to hand out,
+it also does look at configuration of the system, since depending on the actor's path there may be configuration which makes it use some specific
+dispatcher. This works in tandem with settings passed in using `Props`. One can configure actor props using the `Props` object or by configuring it
+in `application.conf` in the deployment section of it.
+
+Finally, the `LocalActorRefProvider` applies all config and creates our ref:
+
+```
+if (async) new RepointableActorRef(system, props2, dispatcher, mailboxType, supervisor, path).initialize(async)
+else new LocalActorRef(system, props2, dispatcher, mailboxType, supervisor, path)
+```
+
+Notice that when using the async init mode (we are using this mode for top-level actors, so we will focus on that), we create a special
+`RepointableActorRef`. This is another reason why top-level refs are more "expensive", they initialize asynchronously and while that init is in flight, they don't actually have a mailbox ready yet (!). This means the ref itself is buffering messages until the mailbox is initialized and the 
+repointable ref is "pointed at" the ready and live cell with its mailbox.
+
+To understand this a bit more, let's look at the `def !(msg)(sender): Unit` implementation of the `RepointableActorRef`:
+
+```
+underlying.sendMessage() // TODO
+```
+
+Internally this ends up executing in the so-called `UnstartedCell`. The `ActorCell` in general is the "heart" of the Actor,
+yet here it is not yet started... so it has to keep acting as if it works before it is started and ready for scheduling...
+It also has no mailbox ready yet, which means it has to internally implement one as "best effort" which will be used for _the few milliseconds
+until the mailbox initialization completes and the cell is started_. This brings us to one of the very few locks in the entirety of Akka,
+in the implementation of `sendMessage` of the `UnstartedCell` we see:
+
+```
+private[akka] class UnstartedCell(
+  val systemImpl: ActorSystemImpl,
+  val self:       RepointableActorRef,
+  val props:      Props,
+  val supervisor: InternalActorRef) extends Cell {
+
+  /*
+   * This lock protects all accesses to this cell’s queues. It also ensures
+   * safe switching to the started ActorCell.
+   */
+  private[this] final val lock = new ReentrantLock
+
+  // use Envelope to keep on-send checks in the same place ACCESS MUST BE PROTECTED BY THE LOCK
+  private[this] final val queue = new JLinkedList[Envelope]()
+
+  // ACCESS MUST BE PROTECTED BY THE LOCK
+  private[this] var sysmsgQueue: LatestFirstSystemMessageList = SystemMessageList.LNil
+```
+
+
+```
+  def sendMessage(msg: Envelope): Unit = {
+    if (lock.tryLock(timeout.length, timeout.unit)) {
+      try {
+        val cell = self.underlying
+        if (cellIsReady(cell)) {
+          cell.sendMessage(msg)
+        } else if (!queue.offer(msg)) {
+          system.eventStream.publish(Warning(self.path.toString, getClass, "dropping message of type " + msg.message.getClass + " due to enqueue failure"))
+          system.deadLetters.tell(DeadLetter(msg.message, msg.sender, self), msg.sender)
+        } else if (Mailbox.debug) println(s"$self temp queueing ${msg.message} from ${msg.sender}")
+      } finally lock.unlock()
+    } else {
+      system.eventStream.publish(Warning(self.path.toString, getClass, "dropping message of type" + msg.message.getClass + " due to lock timeout"))
+      system.deadLetters.tell(DeadLetter(msg.message, msg.sender, self), msg.sender)
+    }
+  }
+
+```
+
+##### context.actorOf
+
+This method allows spawning child actors when you "are" an actor. This spawns them "under" yourself and also makes you their supervisor.
+In other words, in Akka (Untyped) the one who makes child actors, is automatically responsible (supervising) for them. This is unlike Erlang,
+where supervision is completely separate. Later on we'll discuss `watch` as well, but that is different than supervision.
+
+Note also that since we are now attaching new children to our own `ChildrenContainer` which is held by the actor we're in,
+it means that we need to additional synchronization during startup of the new actor (!).
+
+### Differences between System Actors and normal ones
+
+System actors ignore the deployment section; they may only be local.
+
+Remote deployment is a messa anyway...
+
+### Do the Guardian actors have a parent?
+
+An interesting question is... "Do the Guardian actors have a parent?"
+
+After all, they are actors as well, and as we know, in Akka "every actor has a parent".
+
+Indeed, the guardians do have a parent Actor. It is `theOneWhoWalksTheBubblesOfSpaceTime` footnote:[theOneWhoWalksTheBubblesOfSpaceTime - https://github.com/akka/akka/blob/e6633f17fac9b2fe1100af73b18add3ac24ad0df/akka-actor/src/main/scala/akka/actor/ActorRefProvider.scala#L519-L554].
+
+The unstarted cell waits for the parent to get the `Supervise` message and only then the real cell with user code is started.
+This is because the parent needs to know about the child in order to be able to apply the supervision things.
+
+### Restarting Actors
+
+This is why we can do `newCell` -- we restart it "in place" while the mailbox remains untouched.
+
+### Sending (Local) Messages
+
+#### Sending user messages
+
+All messages which are send by users in an Akka application between actors are referred to as "user messages".
+
+
+The delivery guarantee provided for such messages is _at-most-once_, which holds true for either the remote
+or local case. After all, evne in a local setting the JVM may crash at any time (well, in theory at least!),
+thus the "at most once" part holding true even in local applications. In practice though one often assumes
+that messages will be delivered unless we are thinking about critical for correctness things, where we can
+apply at-least-once delivery to messages, which is slower and most costly however can achieve this by also
+applying persistence before.
+
+
+note:: Akka provides _at-most-once delivery_ guarantees for _plain actor messaging_, and on top of this is able 
+to implement _at-least-once delivery_ when it is required. One might be suprised how often at-most once is most of the time enough for most applications.
+
+#### Sending system messages
+
+System messages are a special, they are (best effort) guaranteed to be delivered. This is because many invariants
+of your system depend on those messages. This means that they are internally buffered and re-delivered in thr distributed setting, and in the local setting it means that even if you pick a mailbox that is bounded, system messages actually use a separate queue (which we'll investigate in a second) as they must not bbe dropped on the floor to keep correctness of core akka things, such as death watch, lifecycle events and supervision.
+
+As a short reminder, system messages are for example `Terminated(ref)` which you may have seen (as it is sent
+as effect of a watched actor terminating), or deeply internal messages like `Supervise` which is sent from 
+asynchronously spawned child actor to it's parent so the parent can become its supervisor (this is during child
+actor starting).
+
+Unlike user messages which are any kind of message that users send within an Akka application
+system messages. Let's first see what the `SystemMessage` trait is implemented as:
+
+```
+/** 
+ * INTERNAL API
+ * ... 
+ * <b>NEVER SEND THE SAME SYSTEM MESSAGE OBJECT TO TWO ACTORS</b>
+ */
+private[akka] sealed trait SystemMessage extends PossiblyHarmful with Serializable {
+  // Next fields are only modifiable via the SystemMessageList value class
+  @transient
+  private[sysmsg] var next: SystemMessage = _
+
+  // ... queue operations ...
+}
+```
+
+You may be surprised to see the "never send the same system message" information here. This is because 
+system messages ARE the message queue (!). This is to save space in the Actor Mailbox so we don't have
+two complicated queues but only one, and the simplified one for system messages which is simply 
+a single linked list of the messages.
+
+This allows us to implement the system message queue in the actor mailbox as:
+
+```
+ * INTERNAL API
+ */
+private[akka] abstract class Mailbox(val messageQueue: MessageQueue)
+  extends ForkJoinTask[Unit] with SystemMessageQueue with Runnable {
+  
+  // ... 
+  
+  @volatile
+  protected var _statusDoNotCallMeDirectly: Status = _ //0 by default
+
+  @volatile
+  protected var _systemQueueDoNotCallMeDirectly: SystemMessage = _ //null by default
+```
+
+### Sending Messages to distant nodes (Remoting)
+
+#### Sending user messages
+#### Sending system messages
+
+
+### Processing messages
+
+First system messages are processed -- all of them.
+
+Next user messages are processed, until the `throughput` limit. We also experimented with a time limit, 
+but in reality this was never used -- calculating time costs after all.
+
+### Death Watch: `watch`-ing Actors for lifecycle events
+
+Death watch is modeled after Erlang's `monitor` footnote:[Erlang's monitor function: http://erlang.org/doc/reference_manual/processes.html#monitors] API, in which processes bind their lifecycles to one another.
+
+Lifecycle monitoring of other Actors is quite an important part of Actor systems, since thanks to this one can easily tear down
+entire groups of actors that "only work if others work as well". The concept itself is also present in Erlang, where it is called
+`monitor/2`
+
+#### Dying together, with `DeathPactException`
+
+
+
+When you `context.watch(ref)` an actor and _do not_ handle the resulting `Terminated(ref)`
+messages, this results in an `DeathPactException` being thrown by the watching actor.
+
+In other words, if you only watch, and don't implement logic that handles termination,
+the default behavior is for the watcher to kill itself if the watched actor terminates.
+This is referred to as the "death pact".
+
+A good way to visualize death pact's default behavior is Shakespeare's play Romeo and Juliet,
+in which during the plays finale Romeo finds Juliet "dead", so he decides to kill himself as he can not
+imagine continuing life without her. Shortly after, once Juliet wakes up and sees Romeo really dead,
+she decides to kill herself _for real_ this time. In the end, both actors are dead.
+
+Note that, unlike in Shakespeare's play, the `Terminated()` message will never fire prematurely.
+Once it has been sent we know for certain that the terminated actor is indeed dead.
+This is somewhat more interesting in clusterd environment, where `Terminated` can fire when an entire node
+is marked as `Down` -- since the actor itself may not have actually terminated... however, since the entire node
+is declared as `Down`, we _know_ that we will never receive a message from it ever again.
+
+In clustering, this effect has the simple mnemonic of: "We do not talk to zombies."
+
+One more note about the Romeo & Juliet example: You may have noticed that the terminating oneself is somewhat "mutual" 
+in the play. Once Romeo notices Juliet dead, he kills himself, and likewise once Juliet notices Romeo dead, she kills herself.
+In Akka terms, this could be seen as two actors, which watch _eachother_, which means that whichever actor terminates first, 
+the other one will terminate itself in response to this lifecycle event.
+
+### To `Envelope` or not to `Envelope`, that is the question
+
+You've already seen the envelope mentioned during sending/receiving messages sections of this chapter.
+A popular claim during Akka Typed development was that it would enable us to "drop the Envelopes",
+that is, stop using Envelopes for the message queues because in Akka Typed actors do not automagically
+propagate the `sender` reference (because it could not be typed properly as its type changes on a message-per-message basis).
+
+Let us step back and consider what envelopes gain us in the grand scheme of things, and if we should so readily jump do abandoning them.
+This discussion also slightly reaches into the distributed systems aspect of Actors, as there envelopes are not only useful,
+but a necessity -- but let's not get ahead of ourselves and first consider the local setting.
+
+
+An Envelope is defined by carrying a message, and an ActorRef representing its sender (also sometimes referred to as the `replyTo: ActorRef`):
+
+```scala
+final case class Envelope(msg: Any, sender: ActorRef)
+```
+
+as such, it does not seem to carry much implications -- it does however, and let's take them one by one:
+
+#### Envelopes allow better dead letter and unhandled log statements.
+
+Without envelopes a dead letter (e.g. a message sent to an actor that has already terminated) log statement could at-best be something like:
+
+``

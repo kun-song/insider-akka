@@ -1,0 +1,71 @@
+
+== Foreword
+
+### About Akka
+
+Jonas / Roland?
+
+### Acknowlagements
+
+I would like to thank the entire Akka community, for making it what it is today, and what it will grow to become in the future. 
+You are an amazing, welcoming, and professional community, thank you.
+
+I would like to thank the core Akka team for being the best team I've ever worked with, and can hardly imagine finding another team as skilled,
+well oiled and focused on improving the project as this one. Thanks: all names
+
+### About the author
+
+Konrad 'ktoso' Malawski graduated from the AGH University of Science and Technology. He has worked in small startups, as well as large companies such as eBay, and has been part of the core Akka team at Typesafe/Lightbend since 2014 (just before Akka's 5th anniversary! footnote:[Akka's 5th anniversary infographic https://www.lightbend.com/akka-five-year-anniversary]). He has contributed to most, if not all, modules of Akka, maintaining a strong 2nd committer ranking across its main projects during that time. He has taken care of maintaining Akka HTTP while we were waiting to staff up its team as well as been the helping hand of the teams Tech Lead. He concurrently holds the 2nd most commits in either of these projects, and has lead to founding a number of satelite projects around the Akka "core" ecosystem. 
+
+He participated in the Reactive Streams initiative, by both working on the extensive Technology Compatibility Kit as well as contributing in discussions (on- and off-line), over the last years. He also authored a short, independent, report ("mini book") called _Why Reactive?_ for O'Reilly in 2015.
+
+Outside of the Akka and Reactive ecosystem he has been part of the PolishJUG and GeeCON conference's leadership group, which since 10 years gathers more than 1,200 developers each year in the heart of Krakow, Poland. He (co-)founded: KrakowScala, Lambda Lounge Krakow, The PaperCup London and was leading the Krakow GTUG during its initial years and while it's later been renamed GDG (Google Developers Group).
+
+-- Tokyo, July 2018
+
+== Intro
+
+
+I started writing this book out of a personal need to explain and share some of the internals that Akka has accumulated. While there is plenty books about Akka out there which go over the basics, as well as the reference documentation and guides, that we in the team continue to work on and improve. None of these resources are really going to take you from "Okey, I know how to use Akka", to "Now I fully understand how it works".
+
+Such knowladge can be obtained by watching talks, reading Akka source-code and contributing to Akka itself. But still, it is difficult to extract rationale and process that led to some of the decisions in "one go". As all of core Akka development is made in the open footnote:[Yes, there exist commercial addons, after all Lightbend is a company targeting enterprises, and those have specific "enterprisy" needs that those addons address. They are just that however -- addons -- and none of them really "core" things are developed closed.] so you'd of course be able to find all this information by spending days reviewing pull requests, issues and design discussions in there, however that would be so time consuming, that rarely anyone does so.
+
+By writing this book, I hope to share wth you knowladge that would be really hard to gather by someone who's entire all-around-the-clock isn't dedicated to building and improving Akka. This book is not intended to teach Akka, however if you had exposure to Akka's APIs, or concurrent and distributed programming in the past, you may find it a refreshing (and hopefully at least a bit enlightening) read about internals of one of the most popular library for building reactive distributed systems.
+
+### Versions referred to in this book
+
+Details about the `ActorSystem` are referring to the `2.x` lifecycle of Akka.
+The `1.x` version of Akka was quite different, and we will not spend time on it in this book as the 2.x series is vastly superior,
+and been the de facto standard for more than 5 years by now. More specifically, whenever we'll talk about specific code, you may
+assume that we are talking about the Akka `2.5.x` series.
+
+The same versions assumption, unless stated otherwise, hold for Akka Streams. Though we may refer to previous implementations of it as well,
+which will be highlighted explicitly when we do so.
+
+For some discussion of an completely new `ActorSystem[T]` implementation for Akka Typed we will mostly refer to Roland Kuhn's attempt to 
+implementing such system. However please note that this system implementation has not been merged and by the time a full "native" (rather
+than emulated on top of "Akka classic" (Untyped)) implementation of a Typed actor system would be merged, we could expect a number of changes,
+improvements and "hardening" be applied to it.
+
+Whenever talking about Akka HTTP we will be talking about its `10.1.x` release cycle.
+
+### Resource recommendations to _learn_ Akka
+
+
+This book is not an introduction to Akka. 
+
+Far from it; it assumes knowladge (at least on a conceptual level) of Akka and its modules (such as Actors, Cluster, Streams, HTTP etc.), as well as concurrency and distributed systems knowladge at least on a level that will allow you to track the implemenation decisions explained in this book.
+
+As alternative books to start out with Akka, I strongly recommend the following books:
+
+- If you are looking to start your journey with reactive systems and Akka, I would instead recommend to start out with Raymond Roestenburg's https://www.manning.com/books/akka-in-action[Akka in Action],
+- If you are looking to understand reactive architectures and patterns, which happen to be nicely implementable using Akka, I recommend Roland Kuhn's (ex Akka Tech Lead) https://www.manning.com/books/reactive-design-patterns[Reactive Design Patterns],
+- Last but not least, do not be shy to refer to the official https://doc.akka.io[Reference Documentation]. Which is available with examples in both Java and Scala (with an equal level of attention and quality).
+
+
+While this book indeed is not going to teach you about using Akka, you are absolutely welcome to continue reading if you are curious about how one of the most popular reactive systems library (pretty much having coined the Reactive Manifesto and the term Reactive Systems) is implemented and want to learn about algorithms and data structures used by Akka internally, do bear in mind though that having some exposure to using Akka will be very helpful in understanding why some of the crazy things in the internals are the way they are - since they benefit the end users of the API.
+
+Most, if not all, of the details outlined in this book should be mostly irrelevant to developers _using_ Akka, however if you are an advanced user
+it may help you understand how to make better use of it (i.e. avoiding APIs which are "costly", and understanding why they are).
+
+With that being said... welcome to _Insider Akka_.

@@ -1,0 +1,85 @@
+== Remoting internals
+
+### Streaming remoting pipeline
+
+#### Parallelizing multiple "lanes"
+
+### Message Metadata Compression Table Protocol
+
+### Swappable transports Aeron (UDP) / Akka IO (TCP+TLS)
+
+== APIs that guide and protect
+
+### Streams' GraphStage -- design analysis
+
+### Typed Actors -- design analysis
+
+== Stream API levels of power and abstraction
+
+### Operators, the "safe heaven"
+
+### Graphs, for arbitrary shapes
+
+### Stages, for arbitrary logic protected from concurrency issues
+
+### Reactive Streams SPI, all concurrency issues and hell set lose
+
+== The depths of Stream Materialization 
+
+### Materialization, or "Traversing the blueprints"
+
+https://github.com/akka/akka/blob/master/akka-stream/src/main/scala/akka/stream/impl/package.scala
+
+### Examining the Engine running it all: ActorInterpreter
+
+== Scheduling (Timers)
+
+### No wall-clock time in a Cluster
+
+### The LightArrayRevolverScheduler
+
+### The un-deniable existence of wall-clock time
+
+#### Timers and the Scheduler
+
+== Cluster Failure-detection
+
+=== Transport failures and Cluster-level semantics
+
+Quarantines -- transport
+
+Cluster-level unreachability
+
+=== Fail-over scenarios exposed
+
+
+== Networks and Types
+
+### A Receptionist for thy Actors
+
+Imagine you're on a work trip in some foreign country, you're jet lagged, batteries in all your electronic devices
+have drained, and yet you somehow manage to arrive at the hotel you booked. You want to meet your friend who's (maybe),
+already checked-in at the same hotel (though you're not quite sure, your flights were arriving concurrently after all, 
+and traffic was terrible on the way to the hotel!) You do want to meet your friend, however you're not sure how to find them,
+you don't know the room number (the "Address") after all.
+
+You wouldn't (I hope, at least) barge into random people's hotel rooms, trying to find your friend's room,
+by vaguely remembering something they told you before ("_... was it that they only stay in rooms that end with a 7?_").
+You'd ask at the _reception_, if your friend has arrived, and if they could either call them down for you or tell you their room number.
+
+--- 
+
+Similarily, one should not rely on randomly guessing an `Actor` 's address! This, in fact, describes the difference between using `.actorSelection(String)` and a proper `Receptionist` to locate an `Actor`. Far too often, perhaps tempted by scars of the past of 
+using service locators which return instances if only you knew the right identifier, I've seen developers resolve to exclusively using
+selection to locate "well known actors". This however is increadibly brittle, as the *path* of an Actor really should be it's own thing,
+you should not try to remember and reconstruct by concating strings and guessing where the Actor may live -- similarily how looking for our
+friends hotel room by guessing, is probably a bad idea, you may, after all, end up in someone else's room, and cause everyone quite a hassle.
+
+In Actor systems this is about not integrating over the paths, which could be dynamically allocated, or even changing since there is a rollout 
+ongoing, and in the new version of the software that specific actor has moved somewhere.
+
+By using an Receptionist, we share a piece of information, the `ServiceKey[M]`, by which we can ask the receptionist if the Actor has already,
+checked-in or not yet. Notice that this also deals nicer with typing, as here the Actor, while checking in, lets the receptionist know which protocol
+(messages of type `M`) it is able to speak. This way, even if there's two actors called "bob", but only one of them speaks the protocol you want to 
+communicate with, you'd be able to get the right `ActorRef[M]` from the Receptionist.
+
