@@ -82,7 +82,7 @@ the same name from different threads, like this:
 // one of those calls is guaranteed to throw
 ```
 
-The *guarantee* given by the actor system is that always exactly one of the calls will succeed and the other will fail with an `InvalidActorNameException(s"actor name [$name] is not unique!")`. This is why spawning 
+The *guarantee* given by the actor system is that always exactly one of the calls will succeed and the other will fail with an `InvalidActorNameException(s"actor name [$name] is not unique!")`. This is why spawning has a synchronous part  and an asynchronous part to it. The synchronous part is mostly about guaranteeing actor name uniqueness and preparing the "shell" ActorRef as you'll see in the following steps. The asynchronous part is mostly about setting up supervision.
 
 
 Actors are identified not only by path but also UUID.

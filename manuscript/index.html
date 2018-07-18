@@ -804,7 +804,7 @@ the same name from different threads, like this:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <strong>guarantee</strong> given by the actor system is that always exactly one of the calls will succeed and the other will fail with an <code>InvalidActorNameException(s"actor name [$name] is not unique!")</code>. This is why spawning</p>
+<p>The <strong>guarantee</strong> given by the actor system is that always exactly one of the calls will succeed and the other will fail with an <code>InvalidActorNameException(s"actor name [$name] is not unique!")</code>. This is why spawning has a synchronous part  and an asynchronous part to it. The synchronous part is mostly about guaranteeing actor name uniqueness and preparing the "shell" ActorRef as you&#8217;ll see in the following steps. The asynchronous part is mostly about setting up supervision.</p>
 </div>
 <div class="paragraph">
 <p>Actors are identified not only by path but also UUID.</p>
