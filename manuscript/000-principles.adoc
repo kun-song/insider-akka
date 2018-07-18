@@ -1,0 +1,37 @@
+
+== Guiding Principles
+
+### Concurrency is not Parallelism
+
+Coined, to the best of my knowlage by ... in his talk about Go's go routines,
+applies in the same way to Actors.
+
+
+
+### Islands of sanity, in a sea of parallelism
+
+#### The "single-threaded illusion" of Actors
+
+### Immutability everywhere
+
+One might wonder why immutability is a guiding principle in Akka which is all about Actors,
+which after all are *all about* encapsulating mutable state (that's the one thing they're best at!)
+
+#### ByteString -- immutable bytes
+
+#### Immutability => Sanity
+
+### High-performance, but not at all costs
+
+Actors are often referred to in the context of "high performance" messaging, and while this certainly can be true,
+it should also be put into perspective. It may be high performance "enough" for a person coming from an usual
+single-threaded and/or single-node processing paradigm, someone who's been working on high frequency trading would
+not call actors high performance, even though those systems share many similarities with Actors (processing messages
+from a queue in order, having addressable entities etc).
+
+In the context of Akka it is important to keep in mind the "not at all costs" performance motto. Akka realises that for the
+vast majority of use cases its actors implementation is aboslutely "high performance enough" (esp. since Akka can also fan
+out the processing across many nodes), and does not aim to serve the 10% cases where Actors and the GC of short lived objects
+they cause is not a good fit.
+
+A specific example could be discussing if Akka should or should not carry messages between actors in so-called Envelopes.

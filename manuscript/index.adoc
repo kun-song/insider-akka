@@ -1,0 +1,22 @@
+= Insider Akka
+Konrad 'ktoso' Malawski
+:doctype: book
+:encoding: utf-8
+:lang: en
+:toc: left
+:numbered:
+
+[preface]
+
+include::000-foreword.adoc[]
+include::000-principles.adoc[]
+include::01-actors.adoc[]
+include::000-remoting.adoc[]
+include::000-http.adoc[]
+
+
+
+
+
+
+
