@@ -455,79 +455,76 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_guiding_principles">2. Guiding Principles</a>
 <ul class="sectlevel2">
-<li><a href="#_islands_of_sanity_in_a_sea_of_parallelism">2.1. Islands of sanity, in a sea of parallelism</a></li>
-<li><a href="#_immutability_everywhere">2.2. Immutability everywhere</a></li>
-<li><a href="#_high_performance_but_not_at_all_costs">2.3. High-performance, but not at all costs</a></li>
+<li><a href="#_concurrency_is_not_parallelism">2.1. Concurrency is not Parallelism</a></li>
+<li><a href="#_islands_of_sanity_in_a_sea_of_parallelism">2.2. Islands of sanity, in a sea of parallelism</a></li>
+<li><a href="#_immutability_everywhere">2.3. Immutability everywhere</a></li>
+<li><a href="#_high_performance_but_not_at_all_costs">2.4. High-performance, but not at all costs</a></li>
 </ul>
 </li>
 <li><a href="#_actor_internals">3. Actor internals</a>
 <ul class="sectlevel2">
-<li><a href="#_why_the_historical_type_unsafety">3.1. Why the historical type-unsafety?</a></li>
-<li><a href="#_protocol_design">3.2. Protocol Design</a></li>
-<li><a href="#_the_dungeonwhat_makes_the_actors_run">3.3. The dungeon&#8201;&#8212;&#8201;what makes the Actors run</a></li>
-<li><a href="#_differences_between_system_actors_and_normal_ones">3.4. Differences between System Actors and normal ones</a></li>
-<li><a href="#_do_the_guardian_actors_have_a_parent">3.5. Do the Guardian actors have a parent?</a></li>
-<li><a href="#_restarting_actors">3.6. Restarting Actors</a></li>
-<li><a href="#_sending_local_messages">3.7. Sending (Local) Messages</a></li>
-<li><a href="#_sending_messages_to_distant_nodes_remoting">3.8. Sending Messages to distant nodes (Remoting)</a></li>
-<li><a href="#_processing_messages">3.9. Processing messages</a></li>
-<li><a href="#_death_watch_watch_ing_actors_for_lifecycle_events">3.10. Death Watch: <code>watch</code>-ing Actors for lifecycle events</a></li>
+<li><a href="#_a_world_of_messages">3.1. A world of Messages</a></li>
+<li><a href="#_the_dungeonwhat_makes_the_actors_run">3.2. The Dungeon&#8201;&#8212;&#8201;what makes the Actors run</a></li>
+<li><a href="#_differences_between_system_actors_and_normal_ones">3.3. Differences between System Actors and normal ones</a></li>
+<li><a href="#_do_the_guardian_actors_have_a_parent">3.4. Do the Guardian actors have a parent?</a></li>
+<li><a href="#_restarting_actors">3.5. Restarting Actors</a></li>
+<li><a href="#_sending_local_messages">3.6. Sending (Local) Messages</a></li>
+<li><a href="#_sending_messages_to_distant_nodes_remoting">3.7. Sending Messages to distant nodes (Remoting)</a></li>
+<li><a href="#_processing_messages">3.8. Processing messages</a></li>
+<li><a href="#_death_watch_watch_ing_actors_for_lifecycle_events">3.9. Death Watch: <code>watch</code>-ing Actors for lifecycle events</a></li>
+<li><a href="#_to_envelope_or_not_to_envelope_that_is_the_question">3.10. To <code>Envelope</code> or not to <code>Envelope</code>, that is the question</a></li>
+<li><a href="#_streaming_remoting_pipeline">3.11. Streaming remoting pipeline</a></li>
+<li><a href="#_message_metadata_compression_table_protocol">3.12. Message Metadata Compression Table Protocol</a></li>
+<li><a href="#_swappable_transports_aeron_udp_akka_io_tcptls">3.13. Swappable transports Aeron (UDP) / Akka IO (TCP+TLS)</a></li>
 </ul>
 </li>
-<li><a href="#_remoting_internals">4. Remoting internals</a>
+<li><a href="#_apis_that_guide_and_protect">4. APIs that guide and protect</a>
 <ul class="sectlevel2">
-<li><a href="#_streaming_remoting_pipeline">4.1. Streaming remoting pipeline</a></li>
-<li><a href="#_message_metadata_compression_table_protocol">4.2. Message Metadata Compression Table Protocol</a></li>
-<li><a href="#_swappable_transports_aeron_udp_akka_io_tcptls">4.3. Swappable transports Aeron (UDP) / Akka IO (TCP+TLS)</a></li>
+<li><a href="#_streams_graphstagedesign_analysis">4.1. Streams' GraphStage&#8201;&#8212;&#8201;design analysis</a></li>
+<li><a href="#_typed_actorsdesign_analysis">4.2. Typed Actors&#8201;&#8212;&#8201;design analysis</a></li>
 </ul>
 </li>
-<li><a href="#_apis_that_guide_and_protect">5. APIs that guide and protect</a>
+<li><a href="#_stream_api_levels_of_power_and_abstraction">5. Stream API levels of power and abstraction</a>
 <ul class="sectlevel2">
-<li><a href="#_streams_graphstagedesign_analysis">5.1. Streams' GraphStage&#8201;&#8212;&#8201;design analysis</a></li>
-<li><a href="#_typed_actorsdesign_analysis">5.2. Typed Actors&#8201;&#8212;&#8201;design analysis</a></li>
+<li><a href="#_operators_the_safe_heaven">5.1. Operators, the "safe heaven"</a></li>
+<li><a href="#_graphs_for_arbitrary_shapes">5.2. Graphs, for arbitrary shapes</a></li>
+<li><a href="#_stages_for_arbitrary_logic_protected_from_concurrency_issues">5.3. Stages, for arbitrary logic protected from concurrency issues</a></li>
+<li><a href="#_reactive_streams_spi_all_concurrency_issues_and_hell_set_lose">5.4. Reactive Streams SPI, all concurrency issues and hell set lose</a></li>
 </ul>
 </li>
-<li><a href="#_stream_api_levels_of_power_and_abstraction">6. Stream API levels of power and abstraction</a>
+<li><a href="#_the_depths_of_stream_materialization">6. The depths of Stream Materialization</a>
 <ul class="sectlevel2">
-<li><a href="#_operators_the_safe_heaven">6.1. Operators, the "safe heaven"</a></li>
-<li><a href="#_graphs_for_arbitrary_shapes">6.2. Graphs, for arbitrary shapes</a></li>
-<li><a href="#_stages_for_arbitrary_logic_protected_from_concurrency_issues">6.3. Stages, for arbitrary logic protected from concurrency issues</a></li>
-<li><a href="#_reactive_streams_spi_all_concurrency_issues_and_hell_set_lose">6.4. Reactive Streams SPI, all concurrency issues and hell set lose</a></li>
+<li><a href="#_materialization_or_traversing_the_blueprints">6.1. Materialization, or "Traversing the blueprints"</a></li>
+<li><a href="#_examining_the_engine_running_it_all_actorinterpreter">6.2. Examining the Engine running it all: ActorInterpreter</a></li>
 </ul>
 </li>
-<li><a href="#_the_depths_of_stream_materialization">7. The depths of Stream Materialization</a>
+<li><a href="#_scheduling_timers">7. Scheduling (Timers)</a>
 <ul class="sectlevel2">
-<li><a href="#_materialization_or_traversing_the_blueprints">7.1. Materialization, or "Traversing the blueprints"</a></li>
-<li><a href="#_examining_the_engine_running_it_all_actorinterpreter">7.2. Examining the Engine running it all: ActorInterpreter</a></li>
+<li><a href="#_no_wall_clock_time_in_a_cluster">7.1. No wall-clock time in a Cluster</a></li>
+<li><a href="#_the_lightarrayrevolverscheduler">7.2. The LightArrayRevolverScheduler</a></li>
+<li><a href="#_the_un_deniable_existence_of_wall_clock_time">7.3. The un-deniable existence of wall-clock time</a></li>
 </ul>
 </li>
-<li><a href="#_scheduling_timers">8. Scheduling (Timers)</a>
+<li><a href="#_cluster_failure_detection">8. Cluster Failure-detection</a>
 <ul class="sectlevel2">
-<li><a href="#_no_wall_clock_time_in_a_cluster">8.1. No wall-clock time in a Cluster</a></li>
-<li><a href="#_the_lightarrayrevolverscheduler">8.2. The LightArrayRevolverScheduler</a></li>
-<li><a href="#_the_un_deniable_existence_of_wall_clock_time">8.3. The un-deniable existence of wall-clock time</a></li>
+<li><a href="#_transport_failures_and_cluster_level_semantics">8.1. Transport failures and Cluster-level semantics</a></li>
+<li><a href="#_fail_over_scenarios_exposed">8.2. Fail-over scenarios exposed</a></li>
 </ul>
 </li>
-<li><a href="#_cluster_failure_detection">9. Cluster Failure-detection</a>
+<li><a href="#_networks_and_types">9. Networks and Types</a>
 <ul class="sectlevel2">
-<li><a href="#_transport_failures_and_cluster_level_semantics">9.1. Transport failures and Cluster-level semantics</a></li>
-<li><a href="#_fail_over_scenarios_exposed">9.2. Fail-over scenarios exposed</a></li>
+<li><a href="#_a_receptionist_for_thy_actors">9.1. A Receptionist for thy Actors</a></li>
 </ul>
 </li>
-<li><a href="#_networks_and_types">10. Networks and Types</a>
+<li><a href="#_type_safe_http">10. Type-safe HTTP</a>
 <ul class="sectlevel2">
-<li><a href="#_a_receptionist_for_thy_actors">10.1. A Receptionist for thy Actors</a></li>
+<li><a href="#_akka_https_domain_model">10.1. Akka HTTP&#8217;s Domain Model</a></li>
+<li><a href="#_spraying_the_routesa_note_on_type_safe_routing_dsls">10.2. Spraying the Routes&#8201;&#8212;&#8201;a note on type-safe routing DSLs</a></li>
 </ul>
 </li>
-<li><a href="#_type_safe_http">11. Type-safe HTTP</a>
+<li><a href="#_the_people_crazy_enough_to_think_they_can_change_the_world">11. The people crazy enough to think they can change the world&#8230;&#8203;</a>
 <ul class="sectlevel2">
-<li><a href="#_akka_https_domain_model">11.1. Akka HTTP&#8217;s Domain Model</a></li>
-<li><a href="#_spraying_the_routesa_note_on_type_safe_routing_dsls">11.2. Spraying the Routes&#8201;&#8212;&#8201;a note on type-safe routing DSLs</a></li>
-</ul>
-</li>
-<li><a href="#_the_people_crazy_enough_to_think_they_can_change_the_world">12. The people crazy enough to think they can change the world&#8230;&#8203;</a>
-<ul class="sectlevel2">
-<li><a href="#_asyncawait_within_receive_blocks">12.1. Async/await within receive blocks</a></li>
+<li><a href="#_asyncawait_within_receive_blocks">11.1. Async/await within receive blocks</a></li>
 </ul>
 </li>
 </ul>
@@ -646,29 +643,36 @@ it may help you understand how to make better use of it (i.e. avoiding APIs whic
 <h2 id="_guiding_principles">2. Guiding Principles</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_islands_of_sanity_in_a_sea_of_parallelism">2.1. Islands of sanity, in a sea of parallelism</h3>
+<h3 id="_concurrency_is_not_parallelism">2.1. Concurrency is not Parallelism</h3>
+<div class="paragraph">
+<p>Coined, to the best of my knowlage by &#8230;&#8203; in his talk about Go&#8217;s go routines,
+applies in the same way to Actors.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_islands_of_sanity_in_a_sea_of_parallelism">2.2. Islands of sanity, in a sea of parallelism</h3>
 <div class="sect3">
-<h4 id="_the_single_threaded_illusion_of_actors">2.1.1. The "single-threaded illusion" of Actors</h4>
+<h4 id="_the_single_threaded_illusion_of_actors">2.2.1. The "single-threaded illusion" of Actors</h4>
 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_immutability_everywhere">2.2. Immutability everywhere</h3>
+<h3 id="_immutability_everywhere">2.3. Immutability everywhere</h3>
 <div class="paragraph">
 <p>One might wonder why immutability is a guiding principle in Akka which is all about Actors,
 which after all are <strong>all about</strong> encapsulating mutable state (that&#8217;s the one thing they&#8217;re best at!)</p>
 </div>
 <div class="sect3">
-<h4 id="_bytestringimmutable_bytes">2.2.1. ByteString&#8201;&#8212;&#8201;immutable bytes</h4>
+<h4 id="_bytestringimmutable_bytes">2.3.1. ByteString&#8201;&#8212;&#8201;immutable bytes</h4>
 
 </div>
 <div class="sect3">
-<h4 id="_immutability_sanity">2.2.2. Immutability &#8658; Sanity</h4>
+<h4 id="_immutability_sanity">2.3.2. Immutability &#8658; Sanity</h4>
 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_high_performance_but_not_at_all_costs">2.3. High-performance, but not at all costs</h3>
+<h3 id="_high_performance_but_not_at_all_costs">2.4. High-performance, but not at all costs</h3>
 <div class="paragraph">
 <p>Actors are often referred to in the context of "high performance" messaging, and while this certainly can be true,
 it should also be put into perspective. It may be high performance "enough" for a person coming from an usual
@@ -692,22 +696,45 @@ they cause is not a good fit.</p>
 <h2 id="_actor_internals">3. Actor internals</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_why_the_historical_type_unsafety">3.1. Why the historical type-unsafety?</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_protocol_design">3.2. Protocol Design</h3>
-<div class="sect3">
-<h4 id="_typed_protocol_design">3.2.1. Typed Protocol Design</h4>
+<h3 id="_a_world_of_messages">3.1. A world of Messages</h3>
 <div class="paragraph">
-<p>While we have not yet talked much about Akka Typed (which is an type-safe API on to</p>
+<p>Actors have only one way of communicating&#8201;&#8212;&#8201;by sending and receiving messages.
+Those messages are enqueued into Mailboxes and processed in-order as they arrived in the mailbox
+by given actor. It can, in reaction to a message:</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>send a message,</p>
+</li>
+<li>
+<p>spawn other actors,</p>
+</li>
+<li>
+<p>and change its behavior.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These three actions are the core of the actor model, and as you&#8217;ll see all core abstractions of Akka
+are built around these ideas. In this chapter we&#8217;ll learn about Akka&#8217;s internals of how actors are started, send and receive messages.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_dungeonwhat_makes_the_actors_run">3.3. The dungeon&#8201;&#8212;&#8201;what makes the Actors run</h3>
+<h3 id="_the_dungeonwhat_makes_the_actors_run">3.2. The Dungeon&#8201;&#8212;&#8201;what makes the Actors run</h3>
+<div class="paragraph">
+<p>"The Dungeon" is how the Akka team refers to the "internals" package of Akka actors. The package is indeed called
+<code>akka.actor.dungeon</code>, and is intended to signal to users of the library that they really should not "go there".
+It also reminds a bit of the Akka teams office back in the early days in Uppsala (Sweden), which was established
+in the building which used to be an old prison&#8201;&#8212;&#8201;thus a few prison, cell and other dungeon references in the early
+parts of the code base.</p>
+</div>
+<div class="paragraph">
+<p>The dungeon is what makes the actors run, it contains all low level scheduling and memory visibility tricks Akka has up its sleves.
+In this chapter we&#8217;ll explore those step by step, in order to truly understand how actors work.</p>
+</div>
 <div class="sect3">
-<h4 id="_making_of_a_cyborg_starting_actors">3.3.1. Making of a Cyborg: Starting Actors</h4>
+<h4 id="_making_of_a_cyborg_starting_actors">3.2.1. Making of a Cyborg: Starting Actors</h4>
 <div class="paragraph">
 <p>As well versed Akka developer you likely know that top-level Actors are more "expensive" than child Actors.
 Have you ever wondered why that is? In this section we&#8217;ll explore how Actors are created, and this will also explain
@@ -888,7 +915,7 @@ it means that we need to additional synchronization during startup of the new ac
 </div>
 </div>
 <div class="sect2">
-<h3 id="_differences_between_system_actors_and_normal_ones">3.4. Differences between System Actors and normal ones</h3>
+<h3 id="_differences_between_system_actors_and_normal_ones">3.3. Differences between System Actors and normal ones</h3>
 <div class="paragraph">
 <p>System actors ignore the deployment section; they may only be local.</p>
 </div>
@@ -897,7 +924,7 @@ it means that we need to additional synchronization during startup of the new ac
 </div>
 </div>
 <div class="sect2">
-<h3 id="_do_the_guardian_actors_have_a_parent">3.5. Do the Guardian actors have a parent?</h3>
+<h3 id="_do_the_guardian_actors_have_a_parent">3.4. Do the Guardian actors have a parent?</h3>
 <div class="paragraph">
 <p>An interesting question is&#8230;&#8203; "Do the Guardian actors have a parent?"</p>
 </div>
@@ -913,15 +940,15 @@ This is because the parent needs to know about the child in order to be able to 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_restarting_actors">3.6. Restarting Actors</h3>
+<h3 id="_restarting_actors">3.5. Restarting Actors</h3>
 <div class="paragraph">
 <p>This is why we can do <code>newCell</code>&#8201;&#8212;&#8201;we restart it "in place" while the mailbox remains untouched.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_sending_local_messages">3.7. Sending (Local) Messages</h3>
+<h3 id="_sending_local_messages">3.6. Sending (Local) Messages</h3>
 <div class="sect3">
-<h4 id="_sending_user_messages">3.7.1. Sending user messages</h4>
+<h4 id="_sending_user_messages">3.6.1. Sending user messages</h4>
 <div class="paragraph">
 <p>All messages which are send by users in an Akka application between actors are referred to as "user messages".</p>
 </div>
@@ -944,7 +971,7 @@ to implement <em>at-least-once delivery</em> when it is required. One might be s
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sending_system_messages">3.7.2. Sending system messages</h4>
+<h4 id="_sending_system_messages">3.6.2. Sending system messages</h4>
 <div class="paragraph">
 <p>System messages are a special, they are (best effort) guaranteed to be delivered. This is because many invariants
 of your system depend on those messages. This means that they are internally buffered and re-delivered in thr distributed setting, and in the local setting it means that even if you pick a mailbox that is bounded, system messages actually use a separate queue (which we&#8217;ll investigate in a second) as they must not bbe dropped on the floor to keep correctness of core akka things, such as death watch, lifecycle events and supervision.</p>
@@ -1003,18 +1030,18 @@ private[akka] abstract class Mailbox(val messageQueue: MessageQueue)
 </div>
 </div>
 <div class="sect2">
-<h3 id="_sending_messages_to_distant_nodes_remoting">3.8. Sending Messages to distant nodes (Remoting)</h3>
+<h3 id="_sending_messages_to_distant_nodes_remoting">3.7. Sending Messages to distant nodes (Remoting)</h3>
 <div class="sect3">
-<h4 id="_sending_user_messages_2">3.8.1. Sending user messages</h4>
+<h4 id="_sending_user_messages_2">3.7.1. Sending user messages</h4>
 
 </div>
 <div class="sect3">
-<h4 id="_sending_system_messages_2">3.8.2. Sending system messages</h4>
+<h4 id="_sending_system_messages_2">3.7.2. Sending system messages</h4>
 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_processing_messages">3.9. Processing messages</h3>
+<h3 id="_processing_messages">3.8. Processing messages</h3>
 <div class="paragraph">
 <p>First system messages are processed&#8201;&#8212;&#8201;all of them.</p>
 </div>
@@ -1024,7 +1051,7 @@ but in reality this was never used&#8201;&#8212;&#8201;calculating time costs af
 </div>
 </div>
 <div class="sect2">
-<h3 id="_death_watch_watch_ing_actors_for_lifecycle_events">3.10. Death Watch: <code>watch</code>-ing Actors for lifecycle events</h3>
+<h3 id="_death_watch_watch_ing_actors_for_lifecycle_events">3.9. Death Watch: <code>watch</code>-ing Actors for lifecycle events</h3>
 <div class="paragraph">
 <p>Death watch is modeled after Erlang&#8217;s <code>monitor</code> <sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup> API, in which processes bind their lifecycles to one another.</p>
 </div>
@@ -1034,7 +1061,7 @@ entire groups of actors that "only work if others work as well". The concept its
 <code>monitor/2</code></p>
 </div>
 <div class="sect3">
-<h4 id="_dying_together_with_deathpactexception">3.10.1. Dying together, with <code>DeathPactException</code></h4>
+<h4 id="_dying_together_with_deathpactexception">3.9.1. Dying together, with <code>DeathPactException</code></h4>
 <div class="paragraph">
 <p>When you <code>context.watch(ref)</code> an actor and <em>do not</em> handle the resulting <code>Terminated(ref)</code>
 messages, this results in an <code>DeathPactException</code> being thrown by the watching actor.</p>
@@ -1068,102 +1095,132 @@ the other one will terminate itself in response to this lifecycle event.</p>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_remoting_internals">4. Remoting internals</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_streaming_remoting_pipeline">4.1. Streaming remoting pipeline</h3>
+<h3 id="_to_envelope_or_not_to_envelope_that_is_the_question">3.10. To <code>Envelope</code> or not to <code>Envelope</code>, that is the question</h3>
+<div class="paragraph">
+<p>You&#8217;ve already seen the envelope mentioned during sending/receiving messages sections of this chapter.
+A popular claim during Akka Typed development was that it would enable us to "drop the Envelopes",
+that is, stop using Envelopes for the message queues because in Akka Typed actors do not automagically
+propagate the <code>sender</code> reference (because it could not be typed properly as its type changes on a message-per-message basis).</p>
+</div>
+<div class="paragraph">
+<p>Let us step back and consider what envelopes gain us in the grand scheme of things, and if we should so readily jump do abandoning them.
+This discussion also slightly reaches into the distributed systems aspect of Actors, as there envelopes are not only useful,
+but a necessity&#8201;&#8212;&#8201;but let&#8217;s not get ahead of ourselves and first consider the local setting.</p>
+</div>
+<div class="paragraph">
+<p>An Envelope is defined by carrying a message, and an ActorRef representing its sender (also sometimes referred to as the <code>replyTo: ActorRef</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-scala" data-lang="scala">final case class Envelope(msg: Any, sender: ActorRef)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>as such, it does not seem to carry much implications&#8201;&#8212;&#8201;it does however, and let&#8217;s take them one by one:</p>
+</div>
 <div class="sect3">
-<h4 id="_parallelizing_multiple_lanes">4.1.1. Parallelizing multiple "lanes"</h4>
+<h4 id="_envelopes_allow_better_dead_letter_and_unhandled_log_statements">3.10.1. Envelopes allow better dead letter and unhandled log statements.</h4>
+<div class="paragraph">
+<p>Without envelopes a dead letter (e.g. a message sent to an actor that has already terminated) log statement could at-best be something like:</p>
+</div>
+<div class="paragraph">
+<p>``
+== Remoting internals</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_streaming_remoting_pipeline">3.11. Streaming remoting pipeline</h3>
+<div class="sect3">
+<h4 id="_parallelizing_multiple_lanes">3.11.1. Parallelizing multiple "lanes"</h4>
 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_message_metadata_compression_table_protocol">4.2. Message Metadata Compression Table Protocol</h3>
+<h3 id="_message_metadata_compression_table_protocol">3.12. Message Metadata Compression Table Protocol</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_swappable_transports_aeron_udp_akka_io_tcptls">4.3. Swappable transports Aeron (UDP) / Akka IO (TCP+TLS)</h3>
-
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_apis_that_guide_and_protect">5. APIs that guide and protect</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_streams_graphstagedesign_analysis">5.1. Streams' GraphStage&#8201;&#8212;&#8201;design analysis</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_typed_actorsdesign_analysis">5.2. Typed Actors&#8201;&#8212;&#8201;design analysis</h3>
-
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_stream_api_levels_of_power_and_abstraction">6. Stream API levels of power and abstraction</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_operators_the_safe_heaven">6.1. Operators, the "safe heaven"</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_graphs_for_arbitrary_shapes">6.2. Graphs, for arbitrary shapes</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_stages_for_arbitrary_logic_protected_from_concurrency_issues">6.3. Stages, for arbitrary logic protected from concurrency issues</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_reactive_streams_spi_all_concurrency_issues_and_hell_set_lose">6.4. Reactive Streams SPI, all concurrency issues and hell set lose</h3>
+<h3 id="_swappable_transports_aeron_udp_akka_io_tcptls">3.13. Swappable transports Aeron (UDP) / Akka IO (TCP+TLS)</h3>
 
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_depths_of_stream_materialization">7. The depths of Stream Materialization</h2>
+<h2 id="_apis_that_guide_and_protect">4. APIs that guide and protect</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_materialization_or_traversing_the_blueprints">7.1. Materialization, or "Traversing the blueprints"</h3>
+<h3 id="_streams_graphstagedesign_analysis">4.1. Streams' GraphStage&#8201;&#8212;&#8201;design analysis</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_typed_actorsdesign_analysis">4.2. Typed Actors&#8201;&#8212;&#8201;design analysis</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_stream_api_levels_of_power_and_abstraction">5. Stream API levels of power and abstraction</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_operators_the_safe_heaven">5.1. Operators, the "safe heaven"</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_graphs_for_arbitrary_shapes">5.2. Graphs, for arbitrary shapes</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_stages_for_arbitrary_logic_protected_from_concurrency_issues">5.3. Stages, for arbitrary logic protected from concurrency issues</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_reactive_streams_spi_all_concurrency_issues_and_hell_set_lose">5.4. Reactive Streams SPI, all concurrency issues and hell set lose</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_depths_of_stream_materialization">6. The depths of Stream Materialization</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_materialization_or_traversing_the_blueprints">6.1. Materialization, or "Traversing the blueprints"</h3>
 <div class="paragraph">
 <p><a href="https://github.com/akka/akka/blob/master/akka-stream/src/main/scala/akka/stream/impl/package.scala" class="bare">https://github.com/akka/akka/blob/master/akka-stream/src/main/scala/akka/stream/impl/package.scala</a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_examining_the_engine_running_it_all_actorinterpreter">7.2. Examining the Engine running it all: ActorInterpreter</h3>
+<h3 id="_examining_the_engine_running_it_all_actorinterpreter">6.2. Examining the Engine running it all: ActorInterpreter</h3>
 
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_scheduling_timers">8. Scheduling (Timers)</h2>
+<h2 id="_scheduling_timers">7. Scheduling (Timers)</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_no_wall_clock_time_in_a_cluster">8.1. No wall-clock time in a Cluster</h3>
+<h3 id="_no_wall_clock_time_in_a_cluster">7.1. No wall-clock time in a Cluster</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_the_lightarrayrevolverscheduler">8.2. The LightArrayRevolverScheduler</h3>
+<h3 id="_the_lightarrayrevolverscheduler">7.2. The LightArrayRevolverScheduler</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_the_un_deniable_existence_of_wall_clock_time">8.3. The un-deniable existence of wall-clock time</h3>
+<h3 id="_the_un_deniable_existence_of_wall_clock_time">7.3. The un-deniable existence of wall-clock time</h3>
 <div class="sect3">
-<h4 id="_timers_and_the_scheduler">8.3.1. Timers and the Scheduler</h4>
+<h4 id="_timers_and_the_scheduler">7.3.1. Timers and the Scheduler</h4>
 
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_cluster_failure_detection">9. Cluster Failure-detection</h2>
+<h2 id="_cluster_failure_detection">8. Cluster Failure-detection</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_transport_failures_and_cluster_level_semantics">9.1. Transport failures and Cluster-level semantics</h3>
+<h3 id="_transport_failures_and_cluster_level_semantics">8.1. Transport failures and Cluster-level semantics</h3>
 <div class="paragraph">
 <p>Quarantines&#8201;&#8212;&#8201;transport</p>
 </div>
@@ -1172,7 +1229,7 @@ the other one will terminate itself in response to this lifecycle event.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fail_over_scenarios_exposed">9.2. Fail-over scenarios exposed</h3>
+<h3 id="_fail_over_scenarios_exposed">8.2. Fail-over scenarios exposed</h3>
 <div class="paragraph">
 <p><a href="https://support.lightbend.com/agent/case/10623" class="bare">https://support.lightbend.com/agent/case/10623</a> and others by him</p>
 </div>
@@ -1180,10 +1237,10 @@ the other one will terminate itself in response to this lifecycle event.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_networks_and_types">10. Networks and Types</h2>
+<h2 id="_networks_and_types">9. Networks and Types</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_a_receptionist_for_thy_actors">10.1. A Receptionist for thy Actors</h3>
+<h3 id="_a_receptionist_for_thy_actors">9.1. A Receptionist for thy Actors</h3>
 <div class="paragraph">
 <p>Imagine you&#8217;re on a work trip in some foreign country, you&#8217;re jet lagged, batteries in all your electronic devices
 have drained, and yet you somehow manage to arrive at the hotel you booked. You want to meet your friend who&#8217;s (maybe),
@@ -1218,10 +1275,10 @@ communicate with, you&#8217;d be able to get the right <code>ActorRef[M]</code> 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_type_safe_http">11. Type-safe HTTP</h2>
+<h2 id="_type_safe_http">10. Type-safe HTTP</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_akka_https_domain_model">11.1. Akka HTTP&#8217;s Domain Model</h3>
+<h3 id="_akka_https_domain_model">10.1. Akka HTTP&#8217;s Domain Model</h3>
 <div class="paragraph">
 <p>A fully type-safe representation of the HTTP domain is difficult to pull off.
 HTTP is notorious for its corner cases and ambiguities.</p>
@@ -1231,13 +1288,13 @@ HTTP is notorious for its corner cases and ambiguities.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_spraying_the_routesa_note_on_type_safe_routing_dsls">11.2. Spraying the Routes&#8201;&#8212;&#8201;a note on type-safe routing DSLs</h3>
+<h3 id="_spraying_the_routesa_note_on_type_safe_routing_dsls">10.2. Spraying the Routes&#8201;&#8212;&#8201;a note on type-safe routing DSLs</h3>
 
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_people_crazy_enough_to_think_they_can_change_the_world">12. The people crazy enough to think they can change the world&#8230;&#8203;</h2>
+<h2 id="_the_people_crazy_enough_to_think_they_can_change_the_world">11. The people crazy enough to think they can change the world&#8230;&#8203;</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In this section we will explore random crazy ideas that may change how actor systems look like in
@@ -1247,7 +1304,7 @@ HTTP is notorious for its corner cases and ambiguities.</p>
 <p><a href="https://www.goodreads.com/author/show/14907567.Rob_Siltanen" class="bare">https://www.goodreads.com/author/show/14907567.Rob_Siltanen</a></p>
 </div>
 <div class="sect2">
-<h3 id="_asyncawait_within_receive_blocks">12.1. Async/await within receive blocks</h3>
+<h3 id="_asyncawait_within_receive_blocks">11.1. Async/await within receive blocks</h3>
 
 </div>
 </div>

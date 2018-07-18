@@ -8,8 +8,8 @@ Those messages are enqueued into Mailboxes and processed in-order as they arrive
 by given actor. It can, in reaction to a message: 
 
 1. send a message, 
-1. spawn other actors, 
-1. and change its behavior.
+2. spawn other actors, 
+3. and change its behavior.
 
 These three actions are the core of the actor model, and as you'll see all core abstractions of Akka
 are built around these ideas. In this chapter we'll learn about Akka's internals of how actors are started, send and receive messages.
