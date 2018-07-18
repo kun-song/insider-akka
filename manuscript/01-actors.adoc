@@ -19,9 +19,8 @@ are built around these ideas. In this chapter we'll learn about Akka's internals
 
 "The Dungeon" is how the Akka team refers to the "internals" package of Akka actors. The package is indeed called
 `akka.actor.dungeon`, and is intended to signal to users of the library that they really should not "go there". 
-It also reminds a bit of the Akka teams office back in the early days in Uppsala (Sweden), which was established
-in the building which used to be an old prison -- thus a few prison, cell and other dungeon references in the early
-parts of the code base.
+It also reminds a bit of the Akka teams office back in the early days in Uppsala (Sweden), which inside of an old prison 
+-- which may explain a few "cell", "dragon" and other "dungeon" references in the early parts of the code base.
 
 The dungeon is what makes the actors run, it contains all low level scheduling and memory visibility tricks Akka has up its sleves.
 In this chapter we'll explore those step by step, in order to truly understand how actors work.
