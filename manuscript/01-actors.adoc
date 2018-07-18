@@ -15,7 +15,16 @@ These three actions are the core of the actor model, and as you'll see all core 
 are built around these ideas. In this chapter we'll learn about Akka's internals of how actors are started, send and receive messages.
 
 
-### The dungeon -- what makes the Actors run
+### The Dungeon -- what makes the Actors run
+
+"The Dungeon" is how the Akka team refers to the "internals" package of Akka actors. The package is indeed called
+`akka.actor.dungeon`, and is intended to signal to users of the library that they really should not "go there". 
+It also reminds a bit of the Akka teams office back in the early days in Uppsala (Sweden), which was established
+in the building which used to be an old prison -- thus a few prison, cell and other dungeon references in the early
+parts of the code base.
+
+The dungeon is what makes the actors run, it contains all low level scheduling and memory visibility tricks Akka has up its sleves.
+In this chapter we'll explore those step by step, in order to truly understand how actors work.
 
 #### Making of a Cyborg: Starting Actors
 
