@@ -3,7 +3,7 @@
 
 ### Concurrency is not Parallelism
 
-Coined, to the best of my knowlage by ... in his talk about Go's go routines,
+Coined, to the best of my knowlage by ... in his talk about Go's goroutines,
 applies in the same way to Actors.
 
 

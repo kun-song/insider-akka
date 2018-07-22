@@ -14,7 +14,7 @@ Konrad 'ktoso' Malawski
 
 Jonas / Roland?
 
-### Acknowlagements
+### Acknowledgements
 
 I would like to thank the entire Akka community, for making it what it is today, and what it will grow to become in the future. 
 You are an amazing, welcoming, and professional community, thank you.
@@ -36,9 +36,9 @@ Outside of the Akka and Reactive ecosystem he has been part of the PolishJUG and
 
 I started writing this book out of a personal need to explain and share some of the internals that Akka has accumulated. While there is plenty books about Akka out there which go over the basics, as well as the reference documentation and guides, that we in the team continue to work on and improve. None of these resources are really going to take you from "Okey, I know how to use Akka", to "Now I fully understand how it works".
 
-Such knowladge can be obtained by watching talks, reading Akka source-code and contributing to Akka itself. But still, it is difficult to extract rationale and process that led to some of the decisions in "one go". As all of core Akka development is made in the open footnote:[Yes, there exist commercial addons, after all Lightbend is a company targeting enterprises, and those have specific "enterprisy" needs that those addons address. They are just that however -- addons -- and none of them really "core" things are developed closed.] so you'd of course be able to find all this information by spending days reviewing pull requests, issues and design discussions in there, however that would be so time consuming, that rarely anyone does so.
+Such knowledge can be obtained by watching talks, reading Akka source-code and contributing to Akka itself. But still, it is difficult to extract rationale and process that led to some of the decisions in "one go". As all of core Akka development is made in the open footnote:[Yes, there exist commercial addons, after all Lightbend is a company targeting enterprises, and those have specific "enterprisy" needs that those addons address. They are just that however -- addons -- and none of them really "core" things are developed closed.] so you'd of course be able to find all this information by spending days reviewing pull requests, issues and design discussions in there, however that would be so time consuming, that rarely anyone does so.
 
-By writing this book, I hope to share wth you knowladge that would be really hard to gather by someone who's entire all-around-the-clock isn't dedicated to building and improving Akka. This book is not intended to teach Akka, however if you had exposure to Akka's APIs, or concurrent and distributed programming in the past, you may find it a refreshing (and hopefully at least a bit enlightening) read about internals of one of the most popular library for building reactive distributed systems.
+By writing this book, I hope to share with you knowledge that would be really hard to gather by someone who's entire all-around-the-clock isn't dedicated to building and improving Akka. This book is not intended to teach Akka, however if you had exposure to Akka's APIs, or concurrent and distributed programming in the past, you may find it a refreshing (and hopefully at least a bit enlightening) read about internals of one of the most popular library for building reactive distributed systems.
 
 ### Versions referred to in this book
 
@@ -50,7 +50,7 @@ assume that we are talking about the Akka `2.5.x` series.
 The same versions assumption, unless stated otherwise, hold for Akka Streams. Though we may refer to previous implementations of it as well,
 which will be highlighted explicitly when we do so.
 
-For some discussion of an completely new `ActorSystem[T]` implementation for Akka Typed we will mostly refer to Roland Kuhn's attempt to 
+For some discussion of a completely new `ActorSystem[T]` implementation for Akka Typed we will mostly refer to Roland Kuhn's attempt to 
 implementing such system. However please note that this system implementation has not been merged and by the time a full "native" (rather
 than emulated on top of "Akka classic" (Untyped)) implementation of a Typed actor system would be merged, we could expect a number of changes,
 improvements and "hardening" be applied to it.
@@ -61,7 +61,7 @@ Whenever talking about Akka HTTP we will be talking about its `10.1.x` release c
 
 This book is not an introduction to Akka. 
 
-Far from it; it assumes knowladge (at least on a conceptual level) of Akka and its modules (such as Actors, Cluster, Streams, HTTP etc.), as well as concurrency and distributed systems knowladge at least on a level that will allow you to track the implemenation decisions explained in this book.
+Far from it; it assumes knowledge (at least on a conceptual level) of Akka and its modules (such as Actors, Cluster, Streams, HTTP etc.), as well as concurrency and distributed systems knowledge at least on a level that will allow you to track the implemenation decisions explained in this book.
 
 As alternative books to start out with Akka, I strongly recommend the following books:
 
